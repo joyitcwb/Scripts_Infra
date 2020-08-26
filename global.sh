@@ -96,6 +96,8 @@ Mysql() {
         if [ $OS = "Debian" ]; then
         wget https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
         dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
+        apt-get update
+        percona-release setup ps80
         apt-get install percona-xtrabackup-80 -y
         echo -e "\e[32m OK \e[m"
         elif [ $OS = "CentOS" ]; then

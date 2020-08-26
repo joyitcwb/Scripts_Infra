@@ -72,8 +72,10 @@ Mysql() {
         echo -e "\e[36m Instalando XtraBackup \e[m" 
         sleep 2
             if [ $OS = "Debian" ]; then
+            apt-get install curl
             wget https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
             dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
+            apt-get update
             apt-get install percona-xtrabackup-24 -y
             echo -e "\e[32m OK \e[m"
             elif [ $OS = "CentOS" ]; then

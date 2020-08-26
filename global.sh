@@ -2,17 +2,17 @@
 
 Principal() {
     clear
-    echo "Existe backup local ? (sim/nao)" ; read bkp_local
+    echo "Existe backup local? (sim / nao)." ; read bkp_local
     case $bkp_local in
         sim) BackupLocal ;;
-        nao) echo "continua" ;;
-        *) echo "Resposta invalida ### use (sim/nao)" ; Principal ;;
+        nao) echo "Continua..." ;;
+        *) echo "Resposta invalida ### use (sim / nao)." ; Principal ;;
     esac
 }
 
 BackupLocal() {
     clear
-    echo "Escolha a opção (Template Zabbix 01)"
+    echo "Escolha uma opção (Template Zabbix 01)"
     echo "------------------------------------------"
     echo "1. Mysql "
     echo "2. Hestia"
@@ -32,22 +32,20 @@ BackupLocal() {
         6) Template_t01 ;;
         *) echo "Opção desconhecida." ; echo ; BackupLocal ;;
     esac
-    
-    
-    
-    
+          
 } 
 
 Dir() {
       
     echo "Criando -p $DIR_BKP e $DIR_SCP"
+    sleep 1
     if [ -d "$DIR_BKP" ] && [ -d "$DIR_SCP" ]; then
-    echo " Diretorio ja existe, skip"
+    echo " Diretorios ja existem, skip."
     sleep 2
     else
     mkdir $DIR_BKP
     mkdir $DIR_SCP
-    echo "Diretorio criado"
+    echo "Diretorios criados."
     sleep 2
     fi
 }
@@ -58,18 +56,20 @@ Mysql() {
     DIR_BKP=/joy/backup/mysql
     Dir
     echo
-    echo -e "\e[36m Digite o usuário do mysql \e[m" ; read USER
-    echo -e "\e[36m Digite a senha para usuário $USER \e[m" ; read SECRET
+    echo -e "\e[36m Digite o usuario do MySQL: \e[m" ; read USER
+    echo
+    echo -e "\e[36m Digite a senha para usuario do MySQL: $USER \e[m" ; read SECRET
+    echo
     MYSQL=`mysql --version`
     
-    echo "Para versao Mysql < ou = 5.7 ou Mariadb < ou = 10.2 | Digite: 1"
-    echo "Para versao = ou > Mysql 8  | Digite: 2"
-    echo "Para versao = ou > Mariadb 10.3 ou > | Digite: 3"
-    echo -e "\e[36m A versao do mysql e: $MYSQL \e[m" ; read MY_OPTION
+    echo "Digite [ 1 ]: Para versao Mysql < ou = 5.7 ou Mariadb < ou = 10.2"
+    echo "Digite [ 2 ]: Para versao = ou > Mysql 8"
+    echo "Digite [ 3 ]: Para versao = ou > Mariadb 10.3 ou >"
+    echo -e "\e[36m A versao do MySQL e: $MYSQL \e[m" ; read MY_OPTION
     if [ $MY_OPTION = "1" ] ; then
         SCRIPT=t00_s001_Xtrabackup.sh
         echo
-        echo -e "\e[36m Instalando XtraBackup \e[m" 
+        echo -e "\e[36m Instalando XtraBackup... \e[m" 
         sleep 2
             if [ $OS = "Debian" ]; then
             apt-get install curl
@@ -83,7 +83,7 @@ Mysql() {
             yum install  percona-xtrabackup-24 -y
             echo -e "\e[32m OK \e[m"
             else
-            echo -e "\e[31m $OS - OS não suportado | Verifique a forma correta de instalar o xtraBackup \e[m"
+            echo -e "\e[31m $OS - OS não suportado. | Verifique a forma correta de instalar o XtraBackup. \e[m"
             sleep 3
             fi
         Deploy_Script_Mysql 
@@ -91,7 +91,7 @@ Mysql() {
     elif [ $MY_OPTION = "2" ] ; then
         SCRIPT=t00_s001_Xtrabackup.sh
         echo
-        echo -e "\e[36m Instalando XtraBackup \e[m" 
+        echo -e "\e[36m Instalando XtraBackup... \e[m" 
         sleep 2
         if [ $OS = "Debian" ]; then
         wget https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
@@ -106,7 +106,7 @@ Mysql() {
         yum install  percona-xtrabackup-80 -y
         echo -e "\e[32m OK \e[m"
         else
-        echo -e "\e[31m $OS - OS não suportado | Verifique a forma correta de instalar o xtraBackup \e[m"
+        echo -e "\e[31m $OS - OS não suportado. | Verifique a forma correta de instalar o XtraBackup. \e[m"
         sleep 3
         fi
         Deploy_Script_Mysql        
@@ -114,7 +114,8 @@ Mysql() {
     elif [ $MY_OPTION = "3" ] ; then
         SCRIPT=t00_s002_Mariabackup.sh
         echo
-        echo -e "\e[36m Instalando MariaBackup \e[m" 
+        echo -e "\e[36m Instalando MariaBackup... \e[m"
+        echo
         sleep 2
         if [ $OS = "Debian" ]; then
         apt-get install mariadb-backup -y
@@ -123,13 +124,13 @@ Mysql() {
         yum install  MariaDB-backup -y
         echo -e "\e[32m OK \e[m"
         else
-        echo -e "\e[31m $OS - OS não suportado | Verifique a forma correta de instalar o MariaBackup \e[m"
+        echo -e "\e[31m $OS - OS não suportado. | Verifique a forma correta de instalar o MariaBackup. \e[m"
         sleep 3
         fi
         Deploy_Script_Mysql
 
     else
-    echo -e "\e[31m $OS - Opcao invalida | Digite uma das opcoes validas \e[m" 
+    echo -e "\e[31m $OS - Opcao invalida. | Digite uma das opcoes validas. \e[m" 
     sleep 3
     Mysql
     fi
@@ -138,18 +139,18 @@ Mysql() {
 }
 
 Deploy_Script_Mysql() {
-      echo -e "\e[36m Baixando e configurando o script \e[m"
+      echo -e "\e[36m Baixando e configurando o script... \e[m"
       wget -O $DIR_SCP/$SCRIPT https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/$SCRIPT
       chmod +x $DIR_SCP/$SCRIPT
       sed -i "94i USER=$USER" $DIR_SCP/$SCRIPT
       sed -i "94i SECRET=$SECRET"  $DIR_SCP/$SCRIPT
       echo -e "\e[32m OK \e[m"
       echo
-      echo -e "\e[36m Digite a Hora do backup do mysql \e[m" ; read HORA
+      echo -e "\e[36m Digite a Hora do backup do MySQL: \e[m" ; read HORA
       echo
-      echo -e "\e[36m Digite o Minuto do backup \e[m" ; read MIN
+      echo -e "\e[36m Digite o Minuto do backup do MySQL: \e[m" ; read MIN
       echo
-      echo -e "\e[36m Adicionando tarefa no cron \e[m" 
+      echo -e "\e[36m Adicionando tarefa no cron... \e[m" 
       cronjob=" $MIN $HORA * * * $DIR_SCP/$SCRIPT full #Script Backup XtraBackup | Seg-Dom as $HORA:$MIN"
       (crontab -u root -l; echo "$cronjob" ) | crontab -u root -
       echo -e "\e[32m OK \e[m"
@@ -181,10 +182,9 @@ Postgresql() {
 }
 
 
-
 Template_t01() {
     clear
-    echo -e "\e[36m Fazendo o download dos scripts do template t01 \e[m" 
+    echo -e "\e[36m Fazendo o download dos scripts do template t01... \e[m" 
     echo
     sleep 2
     wget -c -P /joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t01_s001_discovery.sh
@@ -194,7 +194,7 @@ Template_t01() {
     echo -e "\e[32m OK \e[m"
     
     echo
-    echo -e "\e[36m Atualizando zabbix_agent.conf \e[m" 
+    echo -e "\e[36m Atualizando zabbix_agent.conf... \e[m" 
     echo
     sleep 2 
     sed -i "4i UserParameter=backup.discovery,/joy/scripts/zabbix/t01_s001_discovery.sh" /etc/zabbix/zabbix_agentd.conf
@@ -203,10 +203,11 @@ Template_t01() {
     echo -e "\e[32m OK \e[m"
 
     echo
-    echo -e "\e[36m Reiniciando Zabbix Agent \e[m"
+    echo -e "\e[36m Reiniciando Zabbix Agent... \e[m"
     echo
     sleep 2
     # systemctl restart zabbix-agent
+    sleep 1
     echo -e "\e[32m OK \e[m"
 }
 
@@ -222,7 +223,7 @@ elif [ $OS = "CentOS" ]; then
 yum install jq -y
 echo -e "\e[32m OK \e[m"
 else
-echo -e "\e[31m $OS - OS não suportado | Verifique a forma correta de instalar o jq \e[m"
+echo -e "\e[31m $OS - OS não suportado. | Verifique a forma correta de instalar o jq. \e[m"
 sleep 3
 fi
 
@@ -245,7 +246,6 @@ mkdir -p /joy/storage
 echo -e "\e[32m OK \e[m"
 sleep 2
 
-
 Principal
 
 echo
@@ -256,7 +256,3 @@ mkdir -p /joy/scripts/global
 cp $SCRIPT/global.sh /joy/scripts/global
 echo -e "\e[32m OK \e[m"
 sleep 2
-
-
-
-

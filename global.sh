@@ -47,14 +47,14 @@ ZabbixAgent() {
     echo
     echo -e "\e[36m Digite o IP ou FQDN do Servido Zabbix ou Proxy: \e[m" ; read SERVER_HOST
     echo
-    echo -e "\e[36m Digite o ID JOY do Host: \e[m" ; read HOSTNAME
+    echo -e "\e[36m Digite o ID JOY do Host: \e[m" ; read HOST_NAME
     echo
     sleep 2
     sed -i "74i EnableRemoteCommands=1" /etc/zabbix/zabbix_agentd.conf
     sed -i "84i LogRemoteCommands=1" /etc/zabbix/zabbix_agentd.conf
-    sed -i 's/Server=127.0.0.1/Server=$SERVER_HOST/g' /etc/zabbix/zabbix_agentd.conf
+    sed -i 's/Server=127.0.0.1/Server='$SERVER_HOST'/g' /etc/zabbix/zabbix_agentd.conf
     sed -i 's/ServerActive=127.0.0.1/ServerActive=/g' /etc/zabbix/zabbix_agentd.conf
-    sed -i 's/Hostname=Zabbix server/Hostname=$HOSTNAME/g' /etc/zabbix/zabbix_agentd.conf
+    sed -i 's/Hostname=Zabbix server/Hostname='$HOST_NAME'/g' /etc/zabbix/zabbix_agentd.conf
     echo -e "\e[32m OK \e[m"
     sleep 2
     systemctl restart zabbix-agent

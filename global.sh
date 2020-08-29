@@ -13,8 +13,8 @@ Principal() {
     echo -n "Qual a opção desejada? "
     read opcao
     case $opcao in
-        1) ZabbixAgent
-        2) ZabbixProxy
+        1) ZabbixAgent ;;
+        2) ZabbixProxy ;;
         3) BackupLocal ;;
         4) BackupProxmox ;;
         5) BackupElkarbackup ;;

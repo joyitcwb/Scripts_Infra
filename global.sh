@@ -1,6 +1,8 @@
 #!/bin/bash
 
 Principal() {
+    clear
+    echo
     echo "Escolha uma opcao:"
     echo "------------------"
     echo "1. Zabbix Agent"
@@ -25,8 +27,8 @@ Principal() {
 
 ZabbixAgent() {
     if [ $OS = "Debian" ]; then
-        wget https://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-3+$OS_VER_NAME_all.deb
-        dpkg -i zabbix-release_4.0-3+$OS_VER_NAME_all.deb
+        wget https://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-3+"$OS_VER_NAME"_all.deb
+        dpkg -i zabbix-release_4.0-3+"$OS_VER_NAME"_all.deb
         apt-get update
         apt-get install zabbix-agent
         sleep 1
@@ -41,12 +43,15 @@ ZabbixAgent() {
         echo -e "\e[31m $OS - OS não suportado. | Verifique a forma correta de instalar o XtraBackup. \e[m"
         sleep 3
     fi
+
+    Principal
+
 }
 
 ZabbixProxy() {
 if [ $OS = "Debian" ]; then
-        wget https://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-3+$OS_VER_NAME_all.deb
-        dpkg -i zabbix-release_4.0-3+$OS_VER_NAME_all.deb
+        wget https://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-3+"$OS_VER_NAME"_all.deb
+        dpkg -i zabbix-release_4.0-3+"$OS_VER_NAME"_all.deb
         apt-get update
         apt-get install zabbix-proxy-sqlite3
         sleep 1
@@ -61,6 +66,9 @@ if [ $OS = "Debian" ]; then
         echo -e "\e[31m $OS - OS não suportado. | Verifique a forma correta de instalar o XtraBackup. \e[m"
         sleep 3
     fi
+
+    Principal
+
 }
 
 BackupProxmox() {

@@ -1,20 +1,78 @@
 #!/bin/bash
 
 Principal() {
-    clear
-    echo "Existe backup local? (sim / nao)." ; read bkp_local
-    case $bkp_local in
-        sim) BackupLocal ;;
-        nao) echo "Continua..." ;;
-        *) echo "Resposta invalida ### use (sim / nao)." ; Principal ;;
+    echo "Escolha uma opcao:"
+    echo "------------------"
+    echo "1. Zabbix Agent"
+    echo "2. Zabbix Proxy"
+    echo "3. Backup Local [ t01 ]"
+    echo "4. Backup Proxmox [ t02 ]"
+    echo "5. Backup Elkarbackup [ t03 ]"
+    echo "6. Sair"
+    echo
+    echo -n "Qual a opção desejada? "
+    read opcao
+    case $opcao in
+        1) ZabbixAgent
+        2) ZabbixProxy
+        3) BackupLocal ;;
+        4) BackupProxmox ;;
+        5) BackupElkarbackup ;;
+        6) exit ;;
+        *) echo "Opção desconhecida." ; echo ; Principal ;;
     esac
+}
+
+ZabbixAgent() {
+    if [ $OS = "Debian" ]; then
+        wget https://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-3+$OS_VER_NAME_all.deb
+        dpkg -i zabbix-release_4.0-3+$OS_VER_NAME_all.deb
+        apt-get update
+        apt-get install zabbix-agent
+        sleep 1
+        echo -e "\e[32m OK \e[m"
+        elif [ $OS = "CentOS" ]; then
+        rpm -Uvh https://repo.zabbix.com/zabbix/4.0/rhel/$OS_VER/x86_64/zabbix-release-4.0-2.el$OS_VER.noarch.rpm
+        yum clean all
+        yum install zabbix-agent
+        sleep 1
+        echo -e "\e[32m OK \e[m"
+        else
+        echo -e "\e[31m $OS - OS não suportado. | Verifique a forma correta de instalar o XtraBackup. \e[m"
+        sleep 3
+    fi
+}
+
+ZabbixProxy() {
+if [ $OS = "Debian" ]; then
+        wget https://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-3+$OS_VER_NAME_all.deb
+        dpkg -i zabbix-release_4.0-3+$OS_VER_NAME_all.deb
+        apt-get update
+        apt-get install zabbix-proxy-sqlite3
+        sleep 1
+        echo -e "\e[32m OK \e[m"
+        elif [ $OS = "CentOS" ]; then
+        rpm -Uvh https://repo.zabbix.com/zabbix/4.0/rhel/$OS_VER/x86_64/zabbix-release-4.0-2.el$OS_VER.noarch.rpm
+        yum clean all
+        yum install zabbix-proxy-sqlite3
+        sleep 1
+        echo -e "\e[32m OK \e[m"
+        else
+        echo -e "\e[31m $OS - OS não suportado. | Verifique a forma correta de instalar o XtraBackup. \e[m"
+        sleep 3
+    fi
+}
+
+BackupProxmox() {
+    Template_t02
+    Principal
 }
 
 BackupLocal() {
     clear
     echo "Escolha uma opção (Template Zabbix 01)"
-    echo "------------------------------------------"
-    echo "1. Mysql "
+    echo "--------------------------------------"
+    echo "1. Mysql"
     echo "2. Hestia"
     echo "3. Otrs"
     echo "4. Zimbra"
@@ -31,8 +89,7 @@ BackupLocal() {
         5) Postgresql ;;
         6) Template_t01 ;;
         *) echo "Opção desconhecida." ; echo ; BackupLocal ;;
-    esac
-          
+    esac    
 } 
 
 Dir() {
@@ -211,12 +268,45 @@ Template_t01() {
     echo -e "\e[32m OK \e[m"
 }
 
+Template_t02() {
+    clear
+    echo -e "\e[36m Fazendo o download dos scripts do template t02... \e[m" 
+    echo
+    sleep 2
+    wget -c -P /joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t02_s001_discovery.sh
+    wget -c -P /joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t02_s002_status.sh
+    chmod +x /joy/scripts/zabbix/t02_s001_discovery.sh
+    chmod +x /joy/scripts/zabbix/t02_s002_status.sh
+    echo -e "\e[32m OK \e[m"
+    
+    echo
+    echo -e "\e[36m Atualizando zabbix_agent.conf... \e[m" 
+    echo
+    sleep 2 
+    sed -i "4i UserParameter=backup.discovery,/joy/scripts/zabbix/t02_s001_discovery.sh" /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i UserParameter=backup.status[*],/joy/scripts/zabbix/t02_s002_status.sh "'$'1"" /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i ### Joy IT" /etc/zabbix/zabbix_agentd.conf
+    echo -e "\e[32m OK \e[m"
+
+    echo
+    echo -e "\e[36m Reiniciando Zabbix Agent... \e[m"
+    echo
+    sleep 2
+    # systemctl restart zabbix-agent
+    sleep 1
+    echo -e "\e[32m OK \e[m"
+}
+
+###
+
 OS=`hostnamectl | grep Operating | cut -d: -f2 | cut -d' ' -f2`
+OS_VER=`hostnamectl | grep Operating | cut -d: -f2 | cut -d' ' -f4`
 
 echo
 echo -e "\e[36m Instalando jq \e[m" 
 sleep 2
 if [ $OS = "Debian" ]; then
+OS_VER_NAME=`hostnamectl | grep Operating | cut -d: -f2 | cut -d' ' -f5 | sed -e 's/[()]//g'`
 apt-get install jq -y
 echo -e "\e[32m OK \e[m"
 elif [ $OS = "CentOS" ]; then

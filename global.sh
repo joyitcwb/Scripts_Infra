@@ -30,13 +30,13 @@ ZabbixAgent() {
         wget https://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-3+"$OS_VER_NAME"_all.deb
         dpkg -i zabbix-release_4.0-3+"$OS_VER_NAME"_all.deb
         apt-get update
-        apt-get install zabbix-agent
+        apt-get install zabbix-agent -y
         sleep 1
         echo -e "\e[32m OK \e[m"
         elif [ $OS = "CentOS" ]; then
         rpm -Uvh https://repo.zabbix.com/zabbix/4.0/rhel/$OS_VER/x86_64/zabbix-release-4.0-2.el$OS_VER.noarch.rpm
         yum clean all
-        yum install zabbix-agent
+        yum install zabbix-agent -y
         sleep 1
         echo -e "\e[32m OK \e[m"
         else
@@ -53,13 +53,13 @@ if [ $OS = "Debian" ]; then
         wget https://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-3+"$OS_VER_NAME"_all.deb
         dpkg -i zabbix-release_4.0-3+"$OS_VER_NAME"_all.deb
         apt-get update
-        apt-get install zabbix-proxy-sqlite3
+        apt-get install zabbix-proxy-sqlite3 -y
         sleep 1
         echo -e "\e[32m OK \e[m"
         elif [ $OS = "CentOS" ]; then
         rpm -Uvh https://repo.zabbix.com/zabbix/4.0/rhel/$OS_VER/x86_64/zabbix-release-4.0-2.el$OS_VER.noarch.rpm
         yum clean all
-        yum install zabbix-proxy-sqlite3
+        yum install zabbix-proxy-sqlite3 -y
         sleep 1
         echo -e "\e[32m OK \e[m"
         else

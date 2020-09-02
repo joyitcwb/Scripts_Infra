@@ -1,7 +1,7 @@
-if ((Get-ChildItem -Path 'C:\joy\backup\cpj\sql\' | select -last 1).LastWriteTime -ge [datetime]::Today){ 
+if ((Get-ChildItem -Path 'C:\joy\backup\cpj\sql\' | Sort-Object LastAccessTime -Descending | select -first 1).LastWriteTime -ge [datetime]::Today){ 
     'OK'
 }
-elseif ((Get-ChildItem -Path 'C:\joy\backup\cpj\sql\' | select -last 1).LastWriteTime -ge [datetime]::Yesterday){
+elseif ((Get-ChildItem -Path 'C:\joy\backup\cpj\sql\' | Sort-Object LastAccessTime -Descending | select -first 1).LastWriteTime -ge [datetime]::Today.AddDays(-1)){
     'OK'
 }
 else{

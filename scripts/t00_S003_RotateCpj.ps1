@@ -1,2 +1,0 @@
-Get-ChildItem –Path  “C:\joy\backup\cpj\sql” –Recurse | Sort-Object LastWriteTime –Descending | Select-Object -Skip 15 | Remove-Item -Force -Recurse
-Get-ChildItem –Path  “C:\joy\backup\cpj\sql” | Where-Object -Match -Property Name -Value 'cpjwcs_01' | Move-Item -Destination "C:\joy\backup\cpj\archive"

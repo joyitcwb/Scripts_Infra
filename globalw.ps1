@@ -33,10 +33,9 @@ do
                
                $fileContents = Get-Content C:\Program Files\Zabbix Agent\zabbix_agentd.conf
 
-               $fileContents[2] += "`r`n####Joy IT"
-               $fileContents[2] += "`r`nUserParameter=discovery.backup.iperius[*],powershell.exe -noprofile -executionpolicy bypass -File c:\zabbix\scripts\discovery.backup.iperius.ps1"
-               $fileContents[2] += "`r`nUserParameter=discovery.backup.iperius.dados[*],powershell.exe -noprofile -executionpolicy bypass -File c:\zabbix\scripts\discovery.backup.iperius.ps1`r`n"
-               
+               $fileContents[2] += "`r`n#### Joy IT"
+               $fileContents[2] += "`r`nUserParameter=backuplocalw.status,powershell.exe -noprofile -executionpolicy bypass -File c:\joy\scripts\zabbix\t07_s002_status.ps1`r`n"
+                              
                $fileContents | C:\Program Files\Zabbix Agent\zabbix_agentd.conf
                Restart-Service -Name "Zabbix Agent"            
 

@@ -266,15 +266,15 @@ Otrs() {
     Dir
     ln -s /opt/otrs/scripts/backup.pl /joy/scripts/otrs/backup.pl
     echo
-      echo -e "\e[36m Agendamento de backup OTRS \e[m"
+    echo -e "\e[36m Agendamento de backup OTRS \e[m"
     echo
-      echo -e "\e[36m Digite a Hora do backup do OTRS: \e[m" ; read HORA
-      echo
-      echo -e "\e[36m Digite o Minuto do backup do OTRS: \e[m" ; read MIN
-      echo
-      echo -e "\e[36m Adicionando tarefa no cron... \e[m" 
-      cronjob=" $MIN $HORA * * * perl /joy/scripts/otrs/backup.pl -d /joy/backup/otrs -r 3 -t fullbackup  #Script Backup OTRS | Seg-Dom as $HORA:$MIN"
-      (crontab -u otrs -l; echo "$cronjob" ) | crontab -u otrs -
+    echo -e "\e[36m Digite a Hora do backup do OTRS: \e[m" ; read HORA
+    echo
+    echo -e "\e[36m Digite o Minuto do backup do OTRS: \e[m" ; read MIN
+    echo
+    echo -e "\e[36m Adicionando tarefa no cron... \e[m" 
+    cronjob=" $MIN $HORA * * * perl /joy/scripts/otrs/backup.pl -d /joy/backup/otrs -r 3 -t fullbackup  #Script Backup OTRS | Seg-Dom as $HORA:$MIN"
+    (crontab -u root -l; echo "$cronjob" ) | crontab -u root -
       echo -e "\e[32m OK \e[m"
       sleep 3
 
@@ -347,7 +347,7 @@ Template_t02() {
     echo -e "\e[36m Reiniciando Zabbix Agent... \e[m"
     echo
     sleep 2
-    # systemctl restart zabbix-agent
+    systemctl restart zabbix-agent
     sleep 1
     echo -e "\e[32m OK \e[m"
 }

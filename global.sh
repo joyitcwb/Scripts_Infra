@@ -260,9 +260,25 @@ Hestia() {
     Dir
 }
 Otrs() {
-    clear       
-    DIR=/joy/backup/otrs
+    clear
+    DIR_SCP=/joy/scripts/otrs       
+    DIR_BKP=/joy/backup/otrs
     Dir
+    ln -s /opt/otrs/scripts/backup.pl /joy/scripts/otrs/backup.pl
+    echo
+      echo -e "\e[36m Agendamento de backup OTRS \e[m"
+    echo
+      echo -e "\e[36m Digite a Hora do backup do OTRS: \e[m" ; read HORA
+      echo
+      echo -e "\e[36m Digite o Minuto do backup do OTRS: \e[m" ; read MIN
+      echo
+      echo -e "\e[36m Adicionando tarefa no cron... \e[m" 
+      cronjob=" $MIN $HORA * * * perl /joy/scripts/otrs/backup.pl -d /joy/backup/otrs -r 3 -t fullbackup  #Script Backup OTRS | Seg-Dom as $HORA:$MIN"
+      (crontab -u otrs -l; echo "$cronjob" ) | crontab -u otrs -
+      echo -e "\e[32m OK \e[m"
+      sleep 3
+
+    BackupLocal
 }
 
 Zimbra() {

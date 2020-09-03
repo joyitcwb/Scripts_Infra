@@ -318,7 +318,7 @@ Template_t01() {
     echo -e "\e[36m Reiniciando Zabbix Agent... \e[m"
     echo
     sleep 2
-    # systemctl restart zabbix-agent
+    systemctl restart zabbix-agent
     sleep 1
     echo -e "\e[32m OK \e[m"
 }

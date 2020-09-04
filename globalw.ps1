@@ -58,8 +58,8 @@ do
                Write-Host "Inserindo Userparmeter do teplate no zabbix_agentd.conf"               
                $fileContents = Get-Content "C:\Program Files\Zabbix Agent\zabbix_agentd.conf"
                $fileContents[2] += "`r`n#### Joy IT"
-               $fileContents[2] += "`r`nUserParameter=discovery.backup.iperius[*],powershell.exe -noprofile -executionpolicy bypass -File c:\zabbix\scripts\t04_s001_discovery.ps1 $1`r`n"
-               $fileContents[2] += "`r`nUserParameter=discovery.backup.iperius[*],powershell.exe -noprofile -executionpolicy bypass -File c:\zabbix\scripts\t04_s001_discovery.ps1 $1 $2`r`n"
+               $fileContents[2] += "`r`nUserParameter=discovery.backup.iperius[*],powershell.exe -noprofile -executionpolicy bypass -File c:\zabbix\scripts\t04_s001_discovery.ps1 `$1 `n"
+               $fileContents[2] += "`r`nUserParameter=discovery.backup.iperius.dados[*],powershell.exe -noprofile -executionpolicy bypass -File c:\zabbix\scripts\t04_s001_discovery.ps1 `$1 `$2 `r`n"
                $fileContents | Set-Content "C:\Program Files\Zabbix Agent\zabbix_agentd.conf"
                Write-Host ""
 

@@ -7,8 +7,8 @@ function BackupLocal
      Write-Host "================ $Title ================"
      Write-Host ""
      Write-Host "1: Digite '1' para Criar estrutura padrao de pastas da Joy IT  "
-     Write-Host "2: Digite '1' para CPJ [ template - t07 ] "
-     Write-Host "3: Digite '2' para Iperius [ template - t04 ]"
+     Write-Host "2: Digite '2' para CPJ [ template - t07 ] "
+     Write-Host "3: Digite '3' para Iperius [ template - t04 ]"
      Write-Host "S: Digite 's' para sair."
 }
 

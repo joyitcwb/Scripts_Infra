@@ -13,48 +13,46 @@ configdir='/etc/pve/local/qemu-server'
 ARR=()
 
 # Virtual machines
-virtualmachines=`find $configdir -type f -name "*.conf" |cut -d "/" -f 6|cut -d "." -f 1`
+virtualmachines=$(find $configdir -type f -name "*.conf" | cut -d "/" -f 6 | cut -d "." -f 1)
 
 # Backup Configuration for VM's
-backupallmachines=`grep '\-\-all' $backupconfig|wc -l`
+backupallmachines=$(grep '\-\-all' $backupconfig | wc -l)
 
 # Check every VM for configured backup
 if [ "$backupallmachines" = "0" ]; then
-for i in $virtualmachines
-do
-    backupenabled=1
+    for i in $virtualmachines; do
+        backupenabled=1
 
-    checkbackup=`grep $i $backupconfig |sed 's/  */ /g'|cut -d "-" -f 1|cut -d " " -f 8-|tr -d "\n"`
-    if [ "$checkbackup" = "" ];then
-        # echo "VM $i is not configured for backups."
-        backupenabled=0
-    fi
+        checkbackup=$(grep $i $backupconfig | sed 's/  */ /g' | cut -d "-" -f 1 | cut -d " " -f 8- | tr -d "\n")
+        if [ "$checkbackup" = "" ]; then
+            # echo "VM $i is not configured for backups."
+            backupenabled=0
+        fi
 
-    checkbackupenabled=`grep $i $backupconfig | grep "#vzdump" | sed 's/  */ /g'|cut -d "-" -f 1|cut -d " " -f 8-|tr -d "\n"`
-    if ! [ "$checkbackupenabled" = "" ];then
-        # echo "Backup for VM $i is configured, but disabled."
-        backupenabled=0
-    fi
+        checkbackupenabled=$(grep $i $backupconfig | grep "#vzdump" | sed 's/  */ /g' | cut -d "-" -f 1 | cut -d " " -f 8- | tr -d "\n")
+        if ! [ "$checkbackupenabled" = "" ]; then
+            # echo "Backup for VM $i is configured, but disabled."
+            backupenabled=0
+        fi
 
-     checkbackupage=`grep $i $backupconfig | grep "7" | sed 's/  */ /g'|cut -d "-" -f 1|cut -d " " -f 8-|tr -d "\n"`
-    if ! [ "$checkbackupage" = "" ];then
-        # echo "Somente no domingo"
-        backupage=7
-    else
-        # echo "Todos os dias"
-        backupage=0
-    fi
+        checkbackupage=$(grep $i $backupconfig | grep "7" | sed 's/  */ /g' | cut -d "-" -f 1 | cut -d " " -f 8- | tr -d "\n")
+        if ! [ "$checkbackupage" = "" ]; then
+            # echo "Somente no domingo"
+            backupage=7
+        else
+            # echo "Todos os dias"
+            backupage=0
+        fi
 
+        ARR+=("{\"{#VM_NUMBER}\":\""$i"\", \"{#BACKUP_STATUS}\":\""$backupenabled"\",  \"{#BACKUP_AGE}\":\""$backupage"\" }")
 
-ARR+=("{\"{#VM_NUMBER}\":\""$i"\", \"{#BACKUP_STATUS}\":\""$backupenabled"\",  \"{#BACKUP_AGE}\":\""$backupage"\" }")
+    done
+    SAVE_IFS="$IFS"
+    ### separator
+    IFS=","
+    ### bash join array
+    JOINED_LIST="${ARR[*]}"
+    IFS="$SAVE_IFS"
 
-done
-SAVE_IFS="$IFS"
-### separator
-IFS=","
-### bash join array
-JOINED_LIST="${ARR[*]}"
-IFS="$SAVE_IFS"
-
-echo '{ "data": [' $JOINED_LIST ']}'
+    echo '{ "data": [' $JOINED_LIST ']}'
 fi

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>4.4</version>
+    <date>2020-09-10T18:08:02Z</date>
+    <groups>
+        <group>
+            <name>Templates</name>
+        </group>
+        <group>
+            <name>Templates/Backups</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>t01 - Backup Local Linux Joy</template>
+            <name>t01 - Backup Local Linux Joy</name>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+                <group>
+                    <name>Templates/Backups</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>BackupLocal</name>
+                </application>
+            </applications>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>BackupLocal LLD</name>
+                    <key>backup.discovery</key>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Backup {#DIR}</name>
+                            <key>backup.status[{#DIR}]</key>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <applications>
+                                <application>
+                                    <name>BackupLocal</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{str(FAIL)}=1</expression>
+                                    <name>Backup Local com falha | {#DIR}</name>
+                                    <priority>HIGH</priority>
+                                    <manual_close>YES</manual_close>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+</zabbix_export>

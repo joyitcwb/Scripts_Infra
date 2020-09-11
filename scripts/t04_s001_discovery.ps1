@@ -6,7 +6,7 @@ Param(
   [string]$2
 )
 
-# VariÃ¡veis
+# Varia¡veis
 
 $dirjobs = "C:\ProgramData\IperiusBackup\Jobs"
 $dirlogs = "C:\ProgramData\IperiusBackup\Logs"

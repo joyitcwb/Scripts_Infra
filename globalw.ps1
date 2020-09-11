@@ -44,7 +44,7 @@ do
                $fileContents | Set-Content "C:\Program Files\Zabbix Agent\zabbix_agentd.conf"
                Write-Host ""
                
-               Write-Host "Reiniciando o serviço do Zabbix Agent"
+               Write-Host "Reiniciando o servico do Zabbix Agent"
                Restart-Service -Name "Zabbix Agent"
                Write-Host ""            
 
@@ -63,7 +63,7 @@ do
                $fileContents | Set-Content "C:\Program Files\Zabbix Agent\zabbix_agentd.conf"
                Write-Host ""
 
-               Write-Host "Reiniciando o serviço do Zabbix Agent"
+               Write-Host "Reiniciando o servico do Zabbix Agent"
                Restart-Service -Name "Zabbix Agent"
                Write-Host ""
 

@@ -388,6 +388,7 @@ if [ $OS = "Debian" ]; then
     apt-get install jq -y
     echo -e "\e[32m OK \e[m"
 elif [ $OS = "CentOS" ]; then
+    yum install epel-release -y
     yum install jq -y
     echo -e "\e[32m OK \e[m"
 else

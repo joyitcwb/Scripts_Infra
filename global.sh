@@ -144,14 +144,14 @@ BackupLocal() {
 
 Dir() {
 
-    echo "Criando -p $DIR_BKP e $DIR_SCP"
+    echo "Criando $DIR_BKP e $DIR_SCP"
     sleep 1
     if [ -d "$DIR_BKP" ] && [ -d "$DIR_SCP" ]; then
         echo " Diretorios ja existem, skip."
         sleep 2
     else
-        mkdir $DIR_BKP
-        mkdir $DIR_SCP
+        mkdir -p $DIR_BKP
+        mkdir -p $DIR_SCP
         echo "Diretorios criados."
         sleep 2
     fi
@@ -294,7 +294,7 @@ Otrs() {
     read MIN
     echo
     echo -e "\e[36m Adicionando tarefa no cron... \e[m"
-    cronjob=" $MIN $HORA * * * perl /joy/scripts/otrs/backup.pl -d /joy/backup/otrs -r 3 -t fullbackup  #Script Backup OTRS | Seg-Dom as $HORA:$MIN"
+    cronjob=" $MIN $HORA * * * perl /joy/scripts/otrs/backup.pl -d /joy/backup/otrs -c gzip -r 3 -t fullbackup  #Script Backup OTRS | Seg-Dom as $HORA:$MIN"
     (
         crontab -u root -l
         echo "$cronjob"

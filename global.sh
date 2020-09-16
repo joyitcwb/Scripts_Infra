@@ -275,7 +275,8 @@ Deploy_Script_Mysql() {
 
 Hestia() {
     clear
-    DIR=/joy/backup/hestia
+    DIR_SCP=/joy/scripts/hestia
+    DIR_BKP=/joy/backup/hestia
     Dir
 }
 Otrs() {
@@ -307,13 +308,15 @@ Otrs() {
 
 Zimbra() {
     clear
-    DIR=/joy/backup/zimbra
+    DIR_SCP=/joy/scripts/zimbra
+    DIR_BKP=/joy/backup/zimbra
     Dir
 }
 
 Postgresql() {
     clear
-    DIR=/joy/backup/postgresql
+    DIR_SCP=/joy/scripts/postgresql
+    DIR_BKP=/joy/backup/postgresql
     Dir
 }
 

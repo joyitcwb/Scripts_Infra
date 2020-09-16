@@ -4,16 +4,24 @@ DATA_YST=$(date +%Y-%m-%d -d "-1 day")
 DATA_NOW=$(date +%Y-%m-%d)
 
 if [ "$1" = "mysql" ]; then
-     if cat /joy/backup/mysql/xtrabackup.log | grep $DATA_NOW | grep -q "Backup Done"; then
-          echo "OK"
-     elif cat /joy/backup/mysql/xtrabackup.log | grep $DATA_YST | grep -q "Backup Done"; then
-          echo "OK"
-     elif cat /joy/backup/mysql/mariabackup.log | grep $DATA_NOW | grep -q "Backup Done"; then
-          echo "OK"
-     elif cat /joy/backup/mysql/mariabackup.log | grep $DATA_YST | grep -q "Backup Done"; then
-          echo "OK"
+     if [ -e /joy/backup/mysql/xtrabackup.log ]; then
+       if cat /joy/backup/mysql/xtrabackup.log | grep $DATA_NOW | grep -q "Backup Done"; then
+       echo "OK"
+       elif cat /joy/backup/mysql/xtrabackup.log | grep $DATA_YST | grep -q "Backup Done"; then
+       echo "OK"
+       else
+       echo "FAIL"
+       fi
+     elif [ -e /joy/backup/mysql/mariabackup.log ]; then
+       if cat /joy/backup/mysql/mariabackup.log | grep $DATA_NOW | grep -q "Backup Done"; then
+       echo "OK"
+       elif cat /joy/backup/mysql/mariabackup.log | grep $DATA_YST | grep -q "Backup Done"; then
+       echo "OK"
+       else
+       echo "FAIL"
+       fi
      else
-          echo "FAIL"
+     echo "NF-LOG"
      fi
 
 elif [ "$1" = "otrs" ]; then

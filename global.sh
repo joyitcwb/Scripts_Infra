@@ -278,6 +278,9 @@ Hestia() {
     DIR_SCP=/joy/scripts/hestia
     DIR_BKP=/joy/backup/hestia
     Dir
+
+    BackupLocal
+
 }
 Otrs() {
     clear
@@ -311,6 +314,9 @@ Zimbra() {
     DIR_SCP=/joy/scripts/zimbra
     DIR_BKP=/joy/backup/zimbra
     Dir
+
+    BackupLocal
+
 }
 
 Postgresql() {
@@ -318,6 +324,9 @@ Postgresql() {
     DIR_SCP=/joy/scripts/postgresql
     DIR_BKP=/joy/backup/postgresql
     Dir
+
+    BackupLocal
+    
 }
 
 Template_t01() {

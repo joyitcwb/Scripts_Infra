@@ -8,6 +8,10 @@ if [ "$1" = "mysql" ]; then
           echo "OK"
      elif cat /joy/backup/mysql/xtrabackup.log | grep $DATA_YST | grep -q "Backup Done"; then
           echo "OK"
+     elif cat /joy/backup/mysql/mariabackup.log | grep $DATA_NOW | grep -q "Backup Done"; then
+          echo "OK"
+     elif cat /joy/backup/mysql/mariabackup.log | grep $DATA_YST | grep -q "Backup Done"; then
+          echo "OK"
      else
           echo "FAIL"
      fi

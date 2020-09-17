@@ -10,7 +10,7 @@ Principal() {
     echo "3. Backup Local [ t01 ]"
     echo "4. Backup Proxmox [ t02 ]"
     echo "5. Backup Elkarbackup [ t03 ]"
-    echo "6. Sair"
+    echo "6. Continuar e Sair"
     echo
     echo -n "Qual a opcao desejada? "
     read opcao
@@ -20,7 +20,7 @@ Principal() {
     3) BackupLocal ;;
     4) BackupProxmox ;;
     5) BackupElkarbackup ;;
-    6) exit ;;
+    6) Sair ;;
     *)
         echo "Opcao desconhecida."
         echo
@@ -356,7 +356,10 @@ Template_t01() {
     systemctl restart zabbix-agent
     sleep 1
     echo -e "\e[32m OK \e[m"
+
+    Principal    
 }
+
 
 Template_t02() {
     clear
@@ -385,6 +388,20 @@ Template_t02() {
     systemctl restart zabbix-agent
     sleep 1
     echo -e "\e[32m OK \e[m"
+
+    Principal
+}
+    
+Sair(){
+
+    echo
+    echo -e "\e[36m Copiando o script global.sh /joy/scripts/global \e[m"
+    sleep 2
+    SCRIPT=$(pwd)
+    mkdir -p /joy/scripts/global
+    cp $SCRIPT/global.sh /joy/scripts/global
+    echo -e "\e[32m OK \e[m"
+    sleep 2
 }
 
 ###
@@ -428,12 +445,3 @@ echo -e "\e[32m OK \e[m"
 sleep 2
 
 Principal
-
-echo
-echo -e "\e[36m Copiando o script global.sh /joy/scripts/global \e[m"
-sleep 2
-SCRIPT=$(pwd)
-mkdir -p /joy/scripts/global
-cp $SCRIPT/global.sh /joy/scripts/global
-echo -e "\e[32m OK \e[m"
-sleep 2

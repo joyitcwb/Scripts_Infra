@@ -10,7 +10,7 @@ Principal() {
     echo "3. Backup Local [ t01 ]"
     echo "4. Backup Proxmox [ t02 ]"
     echo "5. Backup Elkarbackup [ t03 ]"
-    echo "6. Sair"
+    echo "6. Continuar e Sair"
     echo
     echo -n "Qual a opcao desejada? "
     read opcao
@@ -20,7 +20,7 @@ Principal() {
     3) BackupLocal ;;
     4) BackupProxmox ;;
     5) BackupElkarbackup ;;
-    6) exit ;;
+    6) Sair ;;
     *)
         echo "Opcao desconhecida."
         echo
@@ -277,6 +277,9 @@ Hestia() {
     DIR_SCP=/joy/scripts/hestia
     DIR_BKP=/joy/backup/hestia
     Dir
+
+    BackupLocal
+
 }
 Otrs() {
     clear
@@ -310,6 +313,9 @@ Zimbra() {
     DIR_SCP=/joy/scripts/zimbra
     DIR_BKP=/joy/backup/zimbra
     Dir
+
+    BackupLocal
+
 }
 
 Postgresql() {
@@ -317,6 +323,9 @@ Postgresql() {
     DIR_SCP=/joy/scripts/postgresql
     DIR_BKP=/joy/backup/postgresql
     Dir
+
+    BackupLocal
+    
 }
 
 Template_t01() {
@@ -346,7 +355,10 @@ Template_t01() {
     systemctl restart zabbix-agent
     sleep 1
     echo -e "\e[32m OK \e[m"
+
+    Principal    
 }
+
 
 Template_t02() {
     clear
@@ -363,8 +375,9 @@ Template_t02() {
     echo -e "\e[36m Atualizando zabbix_agent.conf... \e[m"
     echo
     sleep 2
-    sed -i "4i UserParameter=backup.discovery,/joy/scripts/zabbix/t02_s001_discovery.sh" /etc/zabbix/zabbix_agentd.conf
-    sed -i "4i UserParameter=backup.status[*],/joy/scripts/zabbix/t02_s002_status.sh "'$'1"" /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i UserParameter=proxmox-vms-discovery-daily, sudo /joy/scripts/zabbix/t02_s001_discovery.sh" /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i UserParameter=proxmox-vms-discovery-7d, sudo /joy/scripts/zabbix/t02_s001_discovery.sh" /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i UserParameter=proxmox-vms-backup-status[*], sudo /joy/scripts/zabbix/t02_s002_status.sh "'$'1" "'$'2""
     sed -i "4i ### Joy IT" /etc/zabbix/zabbix_agentd.conf
     echo -e "\e[32m OK \e[m"
 
@@ -375,6 +388,20 @@ Template_t02() {
     systemctl restart zabbix-agent
     sleep 1
     echo -e "\e[32m OK \e[m"
+
+    Principal
+}
+    
+Sair(){
+
+    echo
+    echo -e "\e[36m Copiando o script global.sh /joy/scripts/global \e[m"
+    sleep 2
+    SCRIPT=$(pwd)
+    mkdir -p /joy/scripts/global
+    cp $SCRIPT/global.sh /joy/scripts/global
+    echo -e "\e[32m OK \e[m"
+    sleep 2
 }
 
 ###
@@ -418,12 +445,3 @@ echo -e "\e[32m OK \e[m"
 sleep 2
 
 Principal
-
-echo
-echo -e "\e[36m Copiando o script global.sh /joy/scripts/global \e[m"
-sleep 2
-SCRIPT=$(pwd)
-mkdir -p /joy/scripts/global
-cp $SCRIPT/global.sh /joy/scripts/global
-echo -e "\e[32m OK \e[m"
-sleep 2

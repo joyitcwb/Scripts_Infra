@@ -31,14 +31,14 @@ Principal() {
 
 ZabbixAgent() {
     if [ $OS = "Debian" ]; then
-        wget https://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-3+"$OS_VER_NAME"_all.deb
-        dpkg -i zabbix-release_4.0-3+"$OS_VER_NAME"_all.deb
+        wget https://repo.zabbix.com/zabbix/5.0/debian/pool/main/z/zabbix-release/zabbix-release_5.0-1+"$OS_VER_NAME"_all.deb
+        dpkg -i zabbix-release_5.0-1+"$OS_VER_NAME"_all.deb
         apt-get update
         apt-get install zabbix-agent -y
         sleep 1
         echo -e "\e[32m OK \e[m"
     elif [ $OS = "CentOS" ]; then
-        rpm -Uvh https://repo.zabbix.com/zabbix/4.0/rhel/$OS_VER/x86_64/zabbix-release-4.0-2.el$OS_VER.noarch.rpm
+        rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/$OS_VER/x86_64/zabbix-release-5.0-1.el$OS_VER.noarch.rpm
         yum clean all
         yum install zabbix-agent -y
         sleep 1
@@ -56,8 +56,7 @@ ZabbixAgent() {
     read HOST_NAME
     echo
     sleep 2
-    sed -i "74i EnableRemoteCommands=1" /etc/zabbix/zabbix_agentd.conf
-    sed -i "84i LogRemoteCommands=1" /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i  AllowKey=system.run[*] " /etc/zabbix/zabbix_agentd.conf 
     sed -i 's/Server=127.0.0.1/Server='$SERVER_HOST'/g' /etc/zabbix/zabbix_agentd.conf
     sed -i 's/ServerActive=127.0.0.1/ServerActive=/g' /etc/zabbix/zabbix_agentd.conf
     sed -i 's/Hostname=Zabbix server/Hostname='$HOST_NAME'/g' /etc/zabbix/zabbix_agentd.conf
@@ -72,14 +71,14 @@ ZabbixAgent() {
 
 ZabbixProxy() {
     if [ $OS = "Debian" ]; then
-        wget https://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-3+"$OS_VER_NAME"_all.deb
-        dpkg -i zabbix-release_4.0-3+"$OS_VER_NAME"_all.deb
+        wget https://repo.zabbix.com/zabbix/5.0/debian/pool/main/z/zabbix-release/zabbix-release_5.0-1+"$OS_VER_NAME"_all.deb
+        dpkg -i zabbix-release_5.0-1+"$OS_VER_NAME"_all.deb
         apt-get update
         apt-get install zabbix-proxy-sqlite3 -y
         sleep 1
         echo -e "\e[32m OK \e[m"
     elif [ $OS = "CentOS" ]; then
-        rpm -Uvh https://repo.zabbix.com/zabbix/4.0/rhel/$OS_VER/x86_64/zabbix-release-4.0-2.el$OS_VER.noarch.rpm
+        rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/$OS_VER/x86_64/zabbix-release-5.0-1.el$OS_VER.noarch.rpm
         yum clean all
         yum install zabbix-proxy-sqlite3 -y
         sleep 1

@@ -5,7 +5,7 @@ Principal() {
     echo
     echo "Escolha uma opcao:"
     echo "------------------"
-    echo "1. Zabbix Agent"
+    echo "1. Zabbix agent2"
     echo "2. Zabbix Proxy"
     echo "3. Backup Local [ t01 ]"
     echo "4. Backup Proxmox [ t02 ]"
@@ -15,7 +15,7 @@ Principal() {
     echo -n "Qual a opcao desejada? "
     read opcao
     case $opcao in
-    1) ZabbixAgent ;;
+    1) Zabbixagent2 ;;
     2) ZabbixProxy ;;
     3) BackupLocal ;;
     4) BackupProxmox ;;
@@ -29,18 +29,18 @@ Principal() {
     esac
 }
 
-ZabbixAgent() {
+Zabbixagent2() {
     if [ $OS = "Debian" ]; then
         wget https://repo.zabbix.com/zabbix/5.0/debian/pool/main/z/zabbix-release/zabbix-release_5.0-1+"$OS_VER_NAME"_all.deb
         dpkg -i zabbix-release_5.0-1+"$OS_VER_NAME"_all.deb
         apt-get update
-        apt-get install zabbix-agent -y
+        apt-get install zabbix-agent2 -y
         sleep 1
         echo -e "\e[32m OK \e[m"
     elif [ $OS = "CentOS" ]; then
         rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/$OS_VER/x86_64/zabbix-release-5.0-1.el$OS_VER.noarch.rpm
         yum clean all
-        yum install zabbix-agent -y
+        yum install zabbix-agent2 -y
         sleep 1
         echo -e "\e[32m OK \e[m"
     else
@@ -56,15 +56,22 @@ ZabbixAgent() {
     read HOST_NAME
     echo
     sleep 2
-    sed -i "4i  AllowKey=system.run[*] " /etc/zabbix/zabbix_agentd.conf 
-    sed -i 's/Server=127.0.0.1/Server='$SERVER_HOST'/g' /etc/zabbix/zabbix_agentd.conf
-    sed -i 's/ServerActive=127.0.0.1/ServerActive=/g' /etc/zabbix/zabbix_agentd.conf
-    sed -i 's/Hostname=Zabbix server/Hostname='$HOST_NAME'/g' /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i  AllowKey=system.run[*] " /etc/zabbix/zabbix_agent2.conf 
+    sed -i 's/Server=127.0.0.1/Server='$SERVER_HOST'/g' /etc/zabbix/zabbix_agent2.conf
+    sed -i 's/ServerActive=127.0.0.1/ServerActive=/g' /etc/zabbix/zabbix_agent2.conf
+    sed -i 's/Hostname=Zabbix server/Hostname='$HOST_NAME'/g' /etc/zabbix/zabbix_agent2.conf
     echo -e "\e[32m OK \e[m"
     sleep 2
-    systemctl restart zabbix-agent
+    mkdir -p /etc/systemd/system/zabbix-agent2.service.d/
+    touch /etc/systemd/system/zabbix-agent2.service.d/override.conf
+    sed -i "Group=root" /etc/systemd/system/zabbix-agent2.service.d/override.conf
+    sed -i "User=root" /etc/systemd/system/zabbix-agent2.service.d/override.conf
+    sed -i "[Service]" /etc/systemd/system/zabbix-agent2.service.d/override.conf
+    systemctl daemon-reload
+    systemctl restart zabbix-agent2
     sleep 1
-
+    
+    
     Principal
 
 }
@@ -101,7 +108,7 @@ ZabbixProxy() {
     sed -i 's#DBName=zabbix_proxy#DBName=/var/lib/zabbix/zabbix.db#g' /etc/zabbix/zabbix_proxy.conf
     echo -e "\e[32m OK \e[m"
     sleep 2
-    systemctl restart zabbix-agent
+    systemctl restart zabbix-proxy
     sleep 1
 
     Principal
@@ -340,19 +347,19 @@ Template_t01() {
     echo -e "\e[32m OK \e[m"
 
     echo
-    echo -e "\e[36m Atualizando zabbix_agent.conf... \e[m"
+    echo -e "\e[36m Atualizando zabbix_agent2.conf... \e[m"
     echo
     sleep 2
-    sed -i "4i UserParameter=backup.discovery,/joy/scripts/zabbix/t01_s001_discovery.sh" /etc/zabbix/zabbix_agentd.conf
-    sed -i "4i UserParameter=backup.status[*],/joy/scripts/zabbix/t01_s002_status.sh "'$'1"" /etc/zabbix/zabbix_agentd.conf
-    sed -i "4i ### Joy IT" /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i UserParameter=backup.discovery,/joy/scripts/zabbix/t01_s001_discovery.sh" /etc/zabbix/zabbix_agent2d.conf
+    sed -i "4i UserParameter=backup.status[*],/joy/scripts/zabbix/t01_s002_status.sh "'$'1"" /etc/zabbix/zabbix_agent2d.conf
+    sed -i "4i ### Joy IT" /etc/zabbix/zabbix_agent2d.conf
     echo -e "\e[32m OK \e[m"
 
     echo
-    echo -e "\e[36m Reiniciando Zabbix Agent... \e[m"
+    echo -e "\e[36m Reiniciando Zabbix agent2... \e[m"
     echo
     sleep 2
-    systemctl restart zabbix-agent
+    systemctl restart zabbix-agent2
     sleep 1
     echo -e "\e[32m OK \e[m"
 
@@ -372,20 +379,20 @@ Template_t02() {
     echo -e "\e[32m OK \e[m"
 
     echo
-    echo -e "\e[36m Atualizando zabbix_agent.conf... \e[m"
+    echo -e "\e[36m Atualizando zabbix_agent2.conf... \e[m"
     echo
     sleep 2
-    sed -i "4i UserParameter=proxmox-vms-discovery-daily, sudo /joy/scripts/zabbix/t02_s001_discovery.sh" /etc/zabbix/zabbix_agentd.conf
-    sed -i "4i UserParameter=proxmox-vms-discovery-7d, sudo /joy/scripts/zabbix/t02_s001_discovery.sh" /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i UserParameter=proxmox-vms-discovery-daily, sudo /joy/scripts/zabbix/t02_s001_discovery.sh" /etc/zabbix/zabbix_agent2d.conf
+    sed -i "4i UserParameter=proxmox-vms-discovery-7d, sudo /joy/scripts/zabbix/t02_s001_discovery.sh" /etc/zabbix/zabbix_agent2d.conf
     sed -i "4i UserParameter=proxmox-vms-backup-status[*], sudo /joy/scripts/zabbix/t02_s002_status.sh "'$'1" "'$'2""
-    sed -i "4i ### Joy IT" /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i ### Joy IT" /etc/zabbix/zabbix_agent2d.conf
     echo -e "\e[32m OK \e[m"
 
     echo
-    echo -e "\e[36m Reiniciando Zabbix Agent... \e[m"
+    echo -e "\e[36m Reiniciando Zabbix agent2... \e[m"
     echo
     sleep 2
-    systemctl restart zabbix-agent
+    systemctl restart zabbix-agent2
     sleep 1
     echo -e "\e[32m OK \e[m"
 

@@ -35,7 +35,7 @@ if [ "$backupallmachines" = "0" ]; then
             backupenabled=0
         fi
 
-        checkbackupage=$(grep $i $backupconfig | grep "7" | sed 's/  */ /g' | cut -d "-" -f 1 | cut -d " " -f 8- | tr -d "\n")
+        checkbackupage=$(grep $i $backupconfig | grep " 7" | sed 's/  */ /g' | cut -d "-" -f 1 | cut -d " " -f 8- | tr -d "\n")
         if ! [ "$checkbackupage" = "" ]; then
             # echo "Somente no domingo"
             backupage=7

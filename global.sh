@@ -71,7 +71,7 @@ Zabbixagent2() {
     echo "Group=root" >> /etc/systemd/system/zabbix-agent2.service.d/override.conf
     echo "User=root" >> /etc/systemd/system/zabbix-agent2.service.d/override.conf
     
-    systemctl enable zabbix_agent2
+    systemctl enable zabbix-agent2
     systemctl daemon-reload
     systemctl restart zabbix-agent2
     sleep 1

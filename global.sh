@@ -59,7 +59,7 @@ Zabbixagent2() {
     read HOST_NAME
     echo
     sleep 2
-    sed -i "4i AllowKey=system.run[*] " /etc/zabbix/zabbix_agent2.conf 
+    sed -i "4i AllowKey=system.run[*]" /etc/zabbix/zabbix_agent2.conf 
     sed -i 's/Server=127.0.0.1/Server='$SERVER_HOST'/g' /etc/zabbix/zabbix_agent2.conf
     sed -i 's/ServerActive=127.0.0.1/ServerActive=/g' /etc/zabbix/zabbix_agent2.conf
     sed -i 's/Hostname=Zabbix server/Hostname='$HOST_NAME'/g' /etc/zabbix/zabbix_agent2.conf

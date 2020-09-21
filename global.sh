@@ -56,17 +56,18 @@ Zabbixagent2() {
     read HOST_NAME
     echo
     sleep 2
-    sed -i "4i  AllowKey=system.run[*] " /etc/zabbix/zabbix_agent2.conf 
+    sed -i "4i AllowKey=system.run[*] " /etc/zabbix/zabbix_agent2.conf 
     sed -i 's/Server=127.0.0.1/Server='$SERVER_HOST'/g' /etc/zabbix/zabbix_agent2.conf
     sed -i 's/ServerActive=127.0.0.1/ServerActive=/g' /etc/zabbix/zabbix_agent2.conf
     sed -i 's/Hostname=Zabbix server/Hostname='$HOST_NAME'/g' /etc/zabbix/zabbix_agent2.conf
     echo -e "\e[32m OK \e[m"
     sleep 2
-    mkdir -p /etc/systemd/system/zabbix-agent2.service.d/
+    mkdir -p /etc/systemd/system/zabbix-agent2.service.d
     touch /etc/systemd/system/zabbix-agent2.service.d/override.conf
-    sed -i "Group=root" /etc/systemd/system/zabbix-agent2.service.d/override.conf
-    sed -i "User=root" /etc/systemd/system/zabbix-agent2.service.d/override.conf
-    sed -i "[Service]" /etc/systemd/system/zabbix-agent2.service.d/override.conf
+    echo "[Service]" >> /etc/systemd/system/zabbix-agent2.service.d/override.conf
+    echo "Group=root" >> /etc/systemd/system/zabbix-agent2.service.d/override.conf
+    echo "User=root" >> /etc/systemd/system/zabbix-agent2.service.d/override.conf
+    
     systemctl daemon-reload
     systemctl restart zabbix-agent2
     sleep 1
@@ -382,10 +383,10 @@ Template_t02() {
     echo -e "\e[36m Atualizando zabbix_agent2.conf... \e[m"
     echo
     sleep 2
-    sed -i "4i UserParameter=proxmox-vms-discovery-daily, sudo /joy/scripts/zabbix/t02_s001_discovery.sh" /etc/zabbix/zabbix_agent2d.conf
-    sed -i "4i UserParameter=proxmox-vms-discovery-7d, sudo /joy/scripts/zabbix/t02_s001_discovery.sh" /etc/zabbix/zabbix_agent2d.conf
-    sed -i "4i UserParameter=proxmox-vms-backup-status[*], sudo /joy/scripts/zabbix/t02_s002_status.sh "'$'1" "'$'2""
-    sed -i "4i ### Joy IT" /etc/zabbix/zabbix_agent2d.conf
+    sed -i "4i UserParameter=proxmox-vms-discovery-daily,/joy/scripts/zabbix/t02_s001_discovery.sh" /etc/zabbix/zabbix_agent2.conf
+    sed -i "4i UserParameter=proxmox-vms-discovery-7d,/joy/scripts/zabbix/t02_s001_discovery.sh" /etc/zabbix/zabbix_agent2.conf
+    sed -i "4i UserParameter=proxmox-vms-backup-status[*],/joy/scripts/zabbix/t02_s002_status.sh "'$'1" "'$'2"" /etc/zabbix/zabbix_agent2.conf
+    sed -i "4i ### Joy IT" /etc/zabbix/zabbix_agent2.conf
     echo -e "\e[32m OK \e[m"
 
     echo

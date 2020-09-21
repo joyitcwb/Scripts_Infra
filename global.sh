@@ -71,6 +71,7 @@ Zabbixagent2() {
     echo "Group=root" >> /etc/systemd/system/zabbix-agent2.service.d/override.conf
     echo "User=root" >> /etc/systemd/system/zabbix-agent2.service.d/override.conf
     
+    systemctl enable zabbix_agent2
     systemctl daemon-reload
     systemctl restart zabbix-agent2
     sleep 1
@@ -116,6 +117,7 @@ ZabbixProxy() {
     sed -i 's#DBName=zabbix_proxy#DBName=/var/lib/zabbix/zabbix.db#g' /etc/zabbix/zabbix_proxy.conf
     echo -e "\e[32m OK \e[m"
     sleep 2
+    systemctl enable zabbix-proxy
     systemctl restart zabbix-proxy
     sleep 1
 

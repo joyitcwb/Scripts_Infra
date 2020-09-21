@@ -5,7 +5,7 @@ Principal() {
     echo
     echo "Escolha uma opcao:"
     echo "------------------"
-    echo "1. Zabbix agent2"
+    echo "1. Zabbix Agent 2"
     echo "2. Zabbix Proxy"
     echo "3. Backup Local [ t01 ]"
     echo "4. Backup Proxmox [ t02 ]"
@@ -31,6 +31,7 @@ Principal() {
 
 Zabbixagent2() {
     if [ $OS = "Debian" ]; then
+        apt-get purge zabbix-agent
         wget https://repo.zabbix.com/zabbix/5.0/debian/pool/main/z/zabbix-release/zabbix-release_5.0-1+"$OS_VER_NAME"_all.deb
         dpkg -i zabbix-release_5.0-1+"$OS_VER_NAME"_all.deb
         apt-get update
@@ -38,6 +39,8 @@ Zabbixagent2() {
         sleep 1
         echo -e "\e[32m OK \e[m"
     elif [ $OS = "CentOS" ]; then
+        yum remove zabbix-agent
+        rm -rf /etc/zabbix/zabbix_agentd*
         rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/$OS_VER/x86_64/zabbix-release-5.0-1.el$OS_VER.noarch.rpm
         yum clean all
         yum install zabbix-agent2 -y
@@ -79,6 +82,7 @@ Zabbixagent2() {
 
 ZabbixProxy() {
     if [ $OS = "Debian" ]; then
+        apt-get purge zabbix-proxy-sqlite3
         wget https://repo.zabbix.com/zabbix/5.0/debian/pool/main/z/zabbix-release/zabbix-release_5.0-1+"$OS_VER_NAME"_all.deb
         dpkg -i zabbix-release_5.0-1+"$OS_VER_NAME"_all.deb
         apt-get update
@@ -86,6 +90,9 @@ ZabbixProxy() {
         sleep 1
         echo -e "\e[32m OK \e[m"
     elif [ $OS = "CentOS" ]; then
+        yum remove zabbix-proxy-sqlite3
+        rm -rf /etc/zabbix/zabbix_proxy*
+        rm -rf /var/lib/zabbix/zabbix.db
         rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/$OS_VER/x86_64/zabbix-release-5.0-1.el$OS_VER.noarch.rpm
         yum clean all
         yum install zabbix-proxy-sqlite3 -y

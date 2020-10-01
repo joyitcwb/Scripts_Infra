@@ -436,7 +436,7 @@ Template_t03() {
     sed -i "4i UserParameter=elkarbackup.discovery,/joy/scripts/zabbix/t03_s003_discovery.sh" /etc/zabbix/zabbix_agent2.conf
     sed -i "4i UserParameter=elkarbackupQuota.discovery,/joy/scripts/zabbix/t03_s001_Quota_discovery.sh" /etc/zabbix/zabbix_agent2.conf
     sed -i "4i UserParameter=elkarbackup.status[*],/joy/scripts/zabbix/t03_s004_status.sh "'$'1"" /etc/zabbix/zabbix_agent2.conf
-    sed -i "4i UserParameter=elkarbackupQuota.status[*],/joy/scripts/zabbix/t02_s002_status.sh "'$'1" " /etc/zabbix/zabbix_agent2.conf
+    sed -i "4i UserParameter=elkarbackupQuota.status[*],/joy/scripts/zabbix/t03_s002_Quota_status.sh "'$'1" " /etc/zabbix/zabbix_agent2.conf
     sed -i "4i ### Joy IT" /etc/zabbix/zabbix_agent2.conf
     echo -e "\e[32m OK \e[m"
 

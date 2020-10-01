@@ -130,6 +130,11 @@ BackupProxmox() {
     Principal
 }
 
+BackupElkarbackup() {
+    Template_t03
+    Principal
+}
+
 BackupLocal() {
     clear
     echo "Escolha uma opcao (Template Zabbix 01)"
@@ -408,6 +413,45 @@ Template_t02() {
 
     Principal
 }
+
+Template_t03() {
+    clear
+    echo -e "\e[36m Fazendo o download dos scripts do template t03... \e[m"
+    echo
+    sleep 2
+    wget -c -P /joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t03_s003_discovery.sh
+    wget -c -P /joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t03_s004_status.sh
+    wget -c -P /joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t03_s001_Quota_discovery.sh
+    wget -c -P /joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t03_s002_Quota_status.sh
+    chmod +x /joy/scripts/zabbix/t03_s003_discovery.sh
+    chmod +x /joy/scripts/zabbix/t03_s004_status.sh
+    chmod +x /joy/scripts/zabbix/t03_s001_Quota_discovery.sh
+    chmod +x /joy/scripts/zabbix/t03_s002_Quota_status.sh
+    echo -e "\e[32m OK \e[m"
+
+    echo
+    echo -e "\e[36m Atualizando zabbix_agent2.conf... \e[m"
+    echo
+    sleep 2
+    sed -i "4i UserParameter=elkarbackup.discovery,/joy/scripts/zabbix/t03_s003_discovery.sh" /etc/zabbix/zabbix_agent2.conf
+    sed -i "4i UserParameter=elkarbackupQuota.discovery,/joy/scripts/zabbix/t03_s001_Quota_discovery.sh" /etc/zabbix/zabbix_agent2.conf
+    sed -i "4i UserParameter=elkarbackup.status[*],/joy/scripts/zabbix/t03_s004_status.sh "'$'1"" /etc/zabbix/zabbix_agent2.conf
+    sed -i "4i UserParameter=elkarbackupQuota.status[*],/joy/scripts/zabbix/t02_s002_status.sh "'$'1" " /etc/zabbix/zabbix_agent2.conf
+    sed -i "4i ### Joy IT" /etc/zabbix/zabbix_agent2.conf
+    echo -e "\e[32m OK \e[m"
+
+    echo
+    echo -e "\e[36m Reiniciando Zabbix agent2... \e[m"
+    echo
+    sleep 2
+    systemctl restart zabbix-agent2
+    sleep 1
+    echo -e "\e[32m OK \e[m"
+
+    Principal
+}
+
+
     
 Sair(){
 

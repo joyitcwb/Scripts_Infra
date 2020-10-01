@@ -1,0 +1,1 @@
+echo "SELECT JSON_ARRAYAGG(JSON_OBJECT('{#ID}', Job.id, '{#NAME}', Job.name, '{#CLI_ID}',Job.Client_id, '{#CLI_NAME}', Client.name, '{#TOKEN}', Job.token, '{#STATUS}', lastResult, '{#ACTIVE}', Job.isActive)) from Job INNER JOIN Client ON Client.id = Job.Client_id WHERE Job.isActive=1 ;" | mysql -uroot -D elkarbackup -N

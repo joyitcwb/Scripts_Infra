@@ -1,0 +1,1 @@
+echo "SELECT disponivel from Zabbix where idJoy='$1';" | mysql -uroot -D elkarbackup -N

@@ -1,0 +1,1 @@
+echo "SELECT JSON_ARRAYAGG(JSON_OBJECT('{#ID}', idJoy, '{#QUOTA}', totalQuota, '{#USAGE}', totalUsage)) from Zabbix;" | mysql -uroot -D elkarbackup -N
